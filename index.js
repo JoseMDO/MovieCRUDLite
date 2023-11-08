@@ -1,16 +1,19 @@
 const express = require("express");
+const cors = require('cors');
+
 const app = express();
 
 app.use(express.static(__dirname + '/client'))
-
+app.use(cors());
 
 const bodyParser = require("body-parser")
 app.use(bodyParser.urlencoded({extended: true}))
+app.use(bodyParser.json());
 
 const mongoose = require("mongoose")
 
 const mongooseUri = "mongodb+srv://JoseMDO:mongodbpassword123@cluster0.wupcpm1.mongodb.net/movie_database"
-mongoose.connect(mongooseUri)
+mongoose.connect(mongooseUri, { useNewUrlParser: true, useUnifiedTopology: true })
 const movieSchema = {
 	title: String,
 	comments: String
@@ -38,6 +41,13 @@ const renderNotes = (notesArray) => {
 	return text
 }
 
+app.get("/readjson", function(req, res){
+	Movie.find({}).then(notes => {
+		res.type("application/json")
+		res.send(notes)
+	})
+})
+
 app.get("/read", function(req, res){
 	Movie.find({}).then(notes => {
 		res.type("text/plain")
@@ -47,8 +57,29 @@ app.get("/read", function(req, res){
 
 
 
+app.put('/update/:id', async (req, res) => {
+	const { id } = req.params;
+	const { title, comments } = req.body
 
+	try {
+		const movie = await Movie.findByIdAndUpdate(id, { title, comments }, { new:true });
+		res.send(movie);
+	} catch (error) {
+		console.error(error);
+		res.status(500).send(error);
+	}
+})
 
+app.delete('/delete/:id', async (req, res) => {
+	const { id } = req.params;
+	try {
+	  const user = await Movie.findByIdAndDelete(id);
+	  res.send(user);
+	} catch (error) {
+	  console.error(error);
+	  res.status(500).send(error);
+	}
+  });
 
 
 
@@ -59,5 +90,5 @@ app.get('/test', function(request, response) {
 })
 
 app.listen(port, function() {
-	console.log("Server is running at http://localhost:3000/")
+	console.log("Server is running at " + port)
 })
