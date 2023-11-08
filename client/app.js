@@ -1,5 +1,5 @@
 async function getMovies() {
-    await fetch('http://localhost:3000/readjson', {
+    await fetch('https://moviecrud.azurewebsites.net/readjson', {
         method: "GET"
     })
     .then((response) => response.json())
@@ -39,7 +39,7 @@ async function getMovies() {
             };
         
             // Send a PUT request to your Express.js server
-            fetch(`http://localhost:3000/update/${selectedMovieId}`, {
+            fetch(`https://moviecrud.azurewebsites.net/update/${selectedMovieId}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -68,7 +68,7 @@ if (deleteBtn) {
     // Prepare the data to send in the request body
   
     // Send a PUT request to your Express.js server
-    fetch(`http://localhost:3000/delete/${selectedMovieId}`, {
+    fetch(`https://moviecrud.azurewebsites.net/delete/${selectedMovieId}`, {
       method: 'DELETE',
     })
       .then((response) => response.json())
