@@ -13,6 +13,7 @@ app.use(bodyParser.json());
 const mongoose = require("mongoose")
 
 const mongooseUri = "mongodb+srv://JoseMDO:mongodbpassword123@cluster0.wupcpm1.mongodb.net/movie_database"
+
 mongoose.connect(mongooseUri, { useNewUrlParser: true, useUnifiedTopology: true })
 const movieSchema = {
 	title: String,
@@ -45,7 +46,10 @@ app.get("/readjson", function(req, res){
 	Movie.find({}).then(notes => {
 		res.type("application/json")
 		res.send(notes)
-	})
+	}).catch(error => {
+		console.error("Error fetching data: ", error);
+		res.status(500).json({ error: "Internal Server Error" });
+	  });
 })
 
 app.get("/read", function(req, res){
@@ -84,6 +88,7 @@ app.delete('/delete/:id', async (req, res) => {
 
 
 const port = process.env.PORT || 3000
+
 app.get('/test', function(request, response) {
 	response.type('text/plain')
 	response.send('Node.js and Express running on port='+port)
