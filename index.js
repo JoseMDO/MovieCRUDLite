@@ -2,9 +2,10 @@ const express = require("express");
 const cors = require('cors');
 
 const app = express();
+app.use(cors());
 
 app.use(express.static(__dirname + '/client'))
-app.use(cors());
+
 
 const bodyParser = require("body-parser")
 app.use(bodyParser.urlencoded({extended: true}))
@@ -12,7 +13,7 @@ app.use(bodyParser.json());
 
 const mongoose = require("mongoose")
 
-const mongooseUri = "mongodb+srv://JoseMDO:mongodbpassword123@cluster0.wupcpm1.mongodb.net/movie_database"
+const mongooseUri = "mongodb+srv://JoseMDO:mongodbpassword123cluster0.olmshbe.mongodb.net/?retryWrites=true&w=majority"
 
 mongoose.connect(mongooseUri, { useNewUrlParser: true, useUnifiedTopology: true })
 const movieSchema = {
