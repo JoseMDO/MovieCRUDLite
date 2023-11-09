@@ -1,7 +1,8 @@
 const express = require("express");
 const cors = require('cors');
-
+const passport = require('passport')
 const app = express();
+const session = require('express-session')
 app.use(cors());
 
 app.use(express.static(__dirname + '/client'))
@@ -102,5 +103,82 @@ app.listen(port, function() {
 
 
 
-// Authentication 
+// Authentication  
 
+app.use(passport.initialize())
+
+
+app.use(session({
+	secret: 'my-secret-key',
+	resave: false,
+	saveUninitialized: false,
+	cookie: { 
+		httpOnly: true,
+		secure : false,
+		maxAge: 24 * 60 * 60 * 1000,
+	 }
+
+}))
+
+const GitHubStrategy = require('passport-github2').Strategy
+
+passport.use(new GitHubStrategy({
+    clientID: "7072f7f40549cf49c75f",
+    clientSecret: "098b3ab18cd86b0e1d2fbcf5446e69ae4a2046c9",
+    callbackURL: "http://localhost:3000/auth/github/callback"
+  },
+  function(accessToken, refreshToken, profile, done) {
+	console.log(profile.id)
+    return done(null, profile)
+  }
+));
+
+
+app.use(passport.session())
+
+passport.serializeUser(function (user, cb) {
+	cb(null, user.id)
+})
+passport.deserializeUser(function (id, cb) {
+	cb(null, id)
+})
+
+const isAuth = (req, res, next) => req.user ? next() : res.redirect("/login");
+
+app.get("/", isAuth,  (req, res) => {
+	res.sendFile(__dirname + "/client/dashboard.html")
+})
+
+
+
+app.get("/login", (req, res) => {
+	if (req.user) {
+		res.redirect("/")
+		console.log(req.user)
+	}
+	res.sendFile(__dirname + "/client/login.html")
+	console.log(req.user);
+})
+
+app.get("/logout", (req, res) => {
+	req.logOut((err) => {
+		if (err) {
+			return next(err);
+		}
+	});
+	
+	res.redirect('/login')
+})
+
+
+
+
+
+
+app.get('/auth/github', passport.authenticate('github', { scope: [ 'user:email' ] }));
+
+app.get('/auth/github/callback', passport.authenticate('github', { failureRedirect: '/login' }),
+  function(req, res) {
+    // Successful authentication, redirect home.
+    res.redirect('/');
+  });
