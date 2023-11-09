@@ -13,7 +13,7 @@ app.use(bodyParser.json());
 
 const mongoose = require("mongoose")
 
-const mongooseUri = "mongodb+srv://JoseMDO:mongodbpassword123cluster0.olmshbe.mongodb.net/?retryWrites=true&w=majority"
+const mongooseUri = "mongodb+srv://JoseMDO:mongodbpassword123@cluster0.olmshbe.mongodb.net/test"
 
 mongoose.connect(mongooseUri, { useNewUrlParser: true, useUnifiedTopology: true })
 const movieSchema = {
@@ -98,3 +98,9 @@ app.get('/test', function(request, response) {
 app.listen(port, function() {
 	console.log("Server is running at " + port)
 })
+
+
+
+
+// Authentication 
+
