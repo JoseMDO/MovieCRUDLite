@@ -46,7 +46,7 @@ passport.deserializeUser(function (id, cb) {
 	cb(null, id)
 })
 
-
+const authenticated = false;
 
 passport.use(new GitHubStrategy({
     clientID: "7072f7f40549cf49c75f",
@@ -55,6 +55,7 @@ passport.use(new GitHubStrategy({
   },
   function(accessToken, refreshToken, user, cb) {
 	console.log("logged in as:" + user.id)
+	authenticated = true;
     return cb(null, user)
   }
 ));
@@ -62,7 +63,7 @@ passport.use(new GitHubStrategy({
 
 
 const isAuth = (req, res, next) => {
-	if (req.user) {
+	if (authenticated) {
 		console.log("logged in 1" + req.user)
 	  	next();
 	} else {
@@ -94,6 +95,7 @@ app.get("/logout", (req, res) => {
 			return next(err);
 		}
 	});
+	authenticated = false;
 	console.log("logged out")
 	res.redirect('/login')
 })
