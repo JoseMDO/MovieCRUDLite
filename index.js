@@ -23,9 +23,6 @@ app.use(bodyParser.json());
 
 // Authentication  
 
-app.use(passport.initialize())
-const GitHubStrategy = require('passport-github2').Strategy
-
 
 app.use(session({
 	secret: 'my-secret-key',
@@ -33,11 +30,22 @@ app.use(session({
 	saveUninitialized: false,
 	cookie: { 
 		httpOnly: true,
-		secure : false,
+		secure : true,
 		maxAge: 24 * 60 * 60 * 1000,
 	 }
 
 }))
+
+const GitHubStrategy = require('passport-github2').Strategy
+app.use(passport.initialize())
+app.use(passport.session())
+passport.serializeUser(function (user, cb) {
+	cb(null, user.id)
+})
+passport.deserializeUser(function (id, cb) {
+	cb(null, id)
+})
+
 
 
 passport.use(new GitHubStrategy({
@@ -45,21 +53,13 @@ passport.use(new GitHubStrategy({
     clientSecret: "098b3ab18cd86b0e1d2fbcf5446e69ae4a2046c9",
     callbackURL: "https://moviecrudlitejose.azurewebsites.net/auth/github/callback"
   },
-  function(accessToken, refreshToken, user, done) {
+  function(accessToken, refreshToken, user, cb) {
 	console.log("logged in as:" + user.id)
-    return done(null, user)
+    return cb(null, user)
   }
 ));
 
 
-app.use(passport.session())
-
-passport.serializeUser(function (user, cb) {
-	cb(null, user.id)
-})
-passport.deserializeUser(function (id, cb) {
-	cb(null, id)
-})
 
 const isAuth = (req, res, next) => {
 	if (req.user) {
@@ -110,12 +110,6 @@ app.get('/auth/github/callback', passport.authenticate('github', { failureRedire
     // Successful authentication, redirect home.
     res.redirect('/');
   });
-
-
-
-
-
-
 
 
 
