@@ -114,7 +114,7 @@ app.use(session({
 	resave: false,
 	saveUninitialized: false,
 	cookie: { 
-		httpOnly: true,
+		httpOnly: false,
 		secure : true,
 		maxAge: 24 * 60 * 60 * 1000,
 	 }
@@ -178,7 +178,7 @@ app.get("/logout", (req, res) => {
 
 app.get('/auth/github', passport.authenticate('github', { scope: [ 'user:email' ] }));
 
-app.get('/auth/github/callback', passport.authenticate('github', { failureRedirect: '/' }),
+app.get('/auth/github/callback', passport.authenticate('github', { failureRedirect: '/login' }),
   function(req, res) {
     // Successful authentication, redirect home.
     res.redirect('/');
