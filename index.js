@@ -107,6 +107,7 @@ app.listen(port, function() {
 // Authentication  
 
 app.use(passport.initialize())
+const GitHubStrategy = require('passport-github2').Strategy
 
 
 app.use(session({
@@ -121,7 +122,6 @@ app.use(session({
 
 }))
 
-const GitHubStrategy = require('passport-github2').Strategy
 
 passport.use(new GitHubStrategy({
     clientID: "7072f7f40549cf49c75f",
@@ -167,7 +167,7 @@ app.get("/logout", (req, res) => {
 			return next(err);
 		}
 	});
-	
+	console.log("loggedout")
 	res.redirect('/login')
 })
 
