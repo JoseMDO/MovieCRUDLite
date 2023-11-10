@@ -45,9 +45,9 @@ passport.use(new GitHubStrategy({
     clientSecret: "098b3ab18cd86b0e1d2fbcf5446e69ae4a2046c9",
     callbackURL: "https://moviecrudlitejose.azurewebsites.net/auth/github/callback"
   },
-  function(accessToken, refreshToken, profile, done) {
-	console.log("logged in as:" + profile.id)
-    return done(null, profile)
+  function(accessToken, refreshToken, user, done) {
+	console.log("logged in as:" + user.id)
+    return done(null, user)
   }
 ));
 
@@ -90,7 +90,7 @@ app.get("/login", (req, res) => {
 app.get("/logout", (req, res) => {
 	req.logOut((err) => {
 		if (err) {
-			console.log(error)
+			console.log('log out error: ' + error)
 			return next(err);
 		}
 	});
