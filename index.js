@@ -51,7 +51,7 @@ let authenticated = false;
 passport.use(new GitHubStrategy({
     clientID: "7072f7f40549cf49c75f",
     clientSecret: "098b3ab18cd86b0e1d2fbcf5446e69ae4a2046c9",
-    callbackURL: "https://moviecrudlitejose.azurewebsites.net/auth/github/callback"
+    callbackURL: "http://localhost:3000/auth/github/callback"
   },
   function(accessToken, refreshToken, user, cb) {
 	console.log("logged in as:" + user.id)
@@ -80,7 +80,7 @@ app.get("/", isAuth,  (req, res) => {
 
 
 app.get("/login", (req, res) => {
-	if (req.user) {
+	if (authenticated) {
 		res.redirect("/")
 		console.log(req.user)
 	}
