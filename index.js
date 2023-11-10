@@ -129,7 +129,7 @@ passport.use(new GitHubStrategy({
     callbackURL: "https://moviecrudlitejose.azurewebsites.net/auth/github/callback"
   },
   function(accessToken, refreshToken, profile, done) {
-	console.log(profile.id)
+	console.log("logged in as:" + profile.id)
     return done(null, profile)
   }
 ));
@@ -146,7 +146,7 @@ passport.deserializeUser(function (id, cb) {
 
 const isAuth = (req, res, next) => {
 	if (req.user) {
-		console.log("logged in 1")
+		console.log("logged in 1" + req.user)
 	  	next();
 	} else {
 		console.log("not logged in")
@@ -155,7 +155,7 @@ const isAuth = (req, res, next) => {
   };
 
 app.get("/", isAuth,  (req, res) => {
-	console.log("logged in 2")
+	console.log("logged in 2" + req.user)
 	res.sendFile(__dirname + "/client/index.html")
 })
 
