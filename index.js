@@ -147,7 +147,7 @@ passport.deserializeUser(function (id, cb) {
 const isAuth = (req, res, next) => req.user ? next() : res.redirect("/login");
 
 app.get("/", isAuth,  (req, res) => {
-	res.sendFile(__dirname + "/client/dashboard.html")
+	res.sendFile(__dirname + "/client/index.html")
 })
 
 
