@@ -46,7 +46,7 @@ passport.deserializeUser(function (id, cb) {
 	cb(null, id)
 })
 
-const authenticated = false;
+let authenticated = false;
 
 passport.use(new GitHubStrategy({
     clientID: "7072f7f40549cf49c75f",
