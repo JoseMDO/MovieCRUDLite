@@ -1,3 +1,4 @@
+require('dotenv').config()
 const express = require("express");
 const cors = require('cors');
 const passport = require('passport')
@@ -123,8 +124,8 @@ app.use(session({
 const GitHubStrategy = require('passport-github2').Strategy
 
 passport.use(new GitHubStrategy({
-    clientID: "7072f7f40549cf49c75f",
-    clientSecret: "098b3ab18cd86b0e1d2fbcf5446e69ae4a2046c9",
+    clientID: process.env.GITHUB_ID,
+    clientSecret: process.env.GITHUB_SECRET,
     callbackURL: "https://moviecrudlitejose.azurewebsites.net/auth/github/callback"
   },
   function(accessToken, refreshToken, profile, done) {
@@ -177,7 +178,7 @@ app.get("/logout", (req, res) => {
 
 app.get('/auth/github', passport.authenticate('github', { scope: [ 'user:email' ] }));
 
-app.get('/auth/github/callback', passport.authenticate('github', { failureRedirect: '/login' }),
+app.get('/auth/github/callback', passport.authenticate('github', { failureRedirect: '/' }),
   function(req, res) {
     // Successful authentication, redirect home.
     res.redirect('/');
