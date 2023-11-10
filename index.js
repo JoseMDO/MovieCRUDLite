@@ -124,8 +124,8 @@ app.use(session({
 const GitHubStrategy = require('passport-github2').Strategy
 
 passport.use(new GitHubStrategy({
-    clientID: process.env.GITHUB_ID,
-    clientSecret: process.env.GITHUB_SECRET,
+    clientID: "7072f7f40549cf49c75f",
+    clientSecret: "098b3ab18cd86b0e1d2fbcf5446e69ae4a2046c9",
     callbackURL: "https://moviecrudlitejose.azurewebsites.net/auth/github/callback"
   },
   function(accessToken, refreshToken, profile, done) {
