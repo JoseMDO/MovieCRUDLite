@@ -144,9 +144,10 @@ passport.deserializeUser(function (id, cb) {
 	cb(null, id)
 })
 
-const isAuth = (req, res, next) => req.user ? next() : res.redirect("/login");
+const isAuth = (req, res, next) => req.user ? next() :  res.redirect("/login"); console.log("not logged in ");
 
 app.get("/", isAuth,  (req, res) => {
+	console.log("logged in ")
 	res.sendFile(__dirname + "/client/index.html")
 })
 
@@ -164,10 +165,11 @@ app.get("/login", (req, res) => {
 app.get("/logout", (req, res) => {
 	req.logOut((err) => {
 		if (err) {
+			console.log(error)
 			return next(err);
 		}
 	});
-	console.log("loggedout")
+	console.log("logged out")
 	res.redirect('/login')
 })
 
