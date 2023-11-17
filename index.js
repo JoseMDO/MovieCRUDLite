@@ -4,7 +4,7 @@ const cors = require('cors');
 const passport = require('passport')
 const app = express();
 const session = require('express-session')
-app.use(cors());
+const GitHubStrategy = require('passport-github2').Strategy
 
 app.use(express.static(__dirname + '/client'))
 
@@ -14,6 +14,12 @@ app.use(bodyParser.urlencoded({extended: true}))
 app.use(bodyParser.json());
 
 
+app.use(cors({
+	origin:"http://localhost:3000",
+	methods: "GET, POST, PUT, DELETE",
+	credentials: true,
+})
+)
 
 
 
@@ -29,64 +35,83 @@ app.use(session({
 	resave: false,
 	saveUninitialized: false,
 	cookie: { 
-		httpOnly: true,
-		secure : true,
+		// httpOnly: true,
+		secure : false,
 		maxAge: 24 * 60 * 60 * 1000,
 	 }
 
 }))
 
-const GitHubStrategy = require('passport-github2').Strategy
+
 app.use(passport.initialize())
 app.use(passport.session())
-passport.serializeUser(function (user, cb) {
-	cb(null, user.id)
-})
-passport.deserializeUser(function (id, cb) {
-	cb(null, id)
-})
 
-let authenticated = false;
+
 
 passport.use(new GitHubStrategy({
     clientID: "7072f7f40549cf49c75f",
     clientSecret: "098b3ab18cd86b0e1d2fbcf5446e69ae4a2046c9",
     callbackURL: "http://localhost:3000/auth/github/callback"
   },
-  function(accessToken, refreshToken, user, cb) {
-	console.log("logged in as:" + user.id)
-	authenticated = true;
-    return cb(null, user)
+  function(accessToken, refreshToken, profile, done) {
+	console.log("GitHub authentication callback");
+    console.log("Profile:", profile.id);
+    return done(null, profile)
   }
 ));
 
-
-
-const isAuth = (req, res, next) => {
-	if (authenticated) {
-		console.log("logged in 1" + req.user)
-	  	next();
-	} else {
-		console.log("not logged in")
-	  	res.redirect('/login');
-	}
-  };
-
-app.get("/", isAuth,  (req, res) => {
-	console.log("logged in 2" + req.user)
-	res.sendFile(__dirname + "/client/index.html")
+passport.serializeUser(function (user, cb) {
+	//console.log('Serializing user:', user);
+	cb(null, user.id)
 })
+passport.deserializeUser(function (id, cb) {
+	console.log('Deserializing user ID:', id);
+	cb(null, id)
+})
+// app.get('/set-session', (req, res) => {
+// 	req.session.username = 'testuser';
+// 	res.send('Session set.');
+//   });
+  
+  app.get('/get-session', (req, res) => {
+	const username = req.session.username;
+	res.send('Session username: ' + username);
+  });
+
+
+
 
 
 
 app.get("/login", (req, res) => {
-	if (authenticated) {
-		res.redirect("/")
-		console.log(req.user)
+	if (req.user) {
+		console.log("logged in: ", req.user)
+		res.redirect("/main.html")
+		return
 	}
+	console.log("not logged in")
 	res.sendFile(__dirname + "/client/login.html")
-	console.log(req.user);
 })
+
+const isAuth = (req, res, next) => {
+	console.log("isAuth middleware");
+	console.log("req.user:", req.user);
+  
+	if (req.user) {
+	  console.log("User is authenticated:", req.user);
+	  next();
+	} else {
+	  console.log("User is not authenticated. Redirecting to /login");
+	  res.redirect('/login');
+	}
+  };
+
+app.get("/", isAuth, (req, res) => {
+	console.log("logged in 2: ", req.user)
+	res.sendFile(__dirname + "/client/main.html")
+})
+
+
 
 app.get("/logout", (req, res) => {
 	req.logOut((err) => {
@@ -95,7 +120,6 @@ app.get("/logout", (req, res) => {
 			return next(err);
 		}
 	});
-	authenticated = false;
 	console.log("logged out")
 	res.redirect('/login')
 })
