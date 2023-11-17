@@ -25,8 +25,6 @@ app.use(cors({
 
 
 
-
-
 // Authentication  
 
 
@@ -148,7 +146,7 @@ app.get('/auth/github/callback', passport.authenticate('github', { failureRedire
 
 
 
-
+// DATABASE
 
 
 
