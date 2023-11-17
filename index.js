@@ -91,7 +91,6 @@ app.get("/login", (req, res) => {
 const isAuth = (req, res, next) => {
 	console.log("isAuth middleware");
 	console.log("req.user:", req.user);
-  
 	if (req.user) {
 	  console.log("User is authenticated:", req.user);
 	  next();
@@ -107,16 +106,15 @@ app.get("/", isAuth, (req, res) => {
 })
 app.get("/create.html", isAuth, (req, res) => {
 	console.log("logged in 2: ", req.user)
-	res.sendFile(__dirname + "/client/main.html")
+	res.sendFile(__dirname + "/client/create.html")
 })
-
 app.get("/dashboard.html", isAuth, (req, res) => {
 	console.log("logged in 2: ", req.user)
-	res.sendFile(__dirname + "/client/main.html")
+	res.sendFile(__dirname + "/client/dashboard.html")
 })
 app.get("/delete.html", isAuth, (req, res) => {
 	console.log("logged in 2: ", req.user)
-	res.sendFile(__dirname + "/client/main.html")
+	res.sendFile(__dirname + "/client/delete.html")
 })
 app.get("/main.html", isAuth, (req, res) => {
 	console.log("logged in 2: ", req.user)
@@ -124,7 +122,7 @@ app.get("/main.html", isAuth, (req, res) => {
 })
 app.get("/update.html", isAuth, (req, res) => {
 	console.log("logged in 2: ", req.user)
-	res.sendFile(__dirname + "/client/main.html")
+	res.sendFile(__dirname + "/client/update.html")
 })
 
 
