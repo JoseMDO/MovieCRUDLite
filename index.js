@@ -15,7 +15,7 @@ app.use(bodyParser.json());
 
 
 app.use(cors({
-	origin:"http://localhost:3000",
+	origin:"https://moviecrudlitejose.azurewebsites.net",
 	methods: "GET, POST, PUT, DELETE",
 	credentials: true,
 })
@@ -34,7 +34,7 @@ app.use(session({
 	saveUninitialized: false,
 	cookie: { 
 		// httpOnly: true,
-		secure : false,
+		secure : true,
 		maxAge: 24 * 60 * 60 * 1000,
 	 }
 
@@ -49,7 +49,7 @@ app.use(passport.session())
 passport.use(new GitHubStrategy({
     clientID: "7072f7f40549cf49c75f",
     clientSecret: "098b3ab18cd86b0e1d2fbcf5446e69ae4a2046c9",
-    callbackURL: "http://localhost:3000/auth/github/callback"
+    callbackURL: "https://moviecrudlitejose.azurewebsites.net/auth/github/callback"
   },
   function(accessToken, refreshToken, profile, done) {
 	console.log("GitHub authentication callback");
