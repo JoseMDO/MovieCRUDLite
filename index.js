@@ -76,18 +76,6 @@ passport.deserializeUser(function (id, cb) {
 
 
 
-
-
-app.get("/login", (req, res) => {
-	if (req.user) {
-		console.log("logged in: ", req.user)
-		res.redirect("/main.html")
-		return
-	}
-	console.log("not logged in")
-	res.sendFile(__dirname + "/client/login.html")
-})
-
 const isAuth = (req, res, next) => {
 	console.log("isAuth middleware");
 	console.log("req.user:", req.user);
@@ -126,6 +114,16 @@ app.get("/update.html", isAuth, (req, res) => {
 })
 
 
+
+app.get("/login", (req, res) => {
+	if (req.user) {
+		console.log("logged in: ", req.user)
+		res.redirect("/main.html")
+		return
+	}
+	console.log("not logged in")
+	res.sendFile(__dirname + "/client/login.html")
+})
 
 app.get("/logout", (req, res) => {
 	req.logOut((err) => {
