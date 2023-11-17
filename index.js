@@ -74,10 +74,8 @@ passport.deserializeUser(function (id, cb) {
   });
 
 
-
-
 const isAuth = (req, res, next) => {
-	console.log("isAuth middleware");
+	console.log("isAuth middleware for: ", req.url);
 	console.log("req.user:", req.user);
 	if (req.user) {
 	  console.log("User is authenticated:", req.user);
@@ -92,26 +90,14 @@ app.get("/", isAuth, (req, res) => {
 	console.log("logged in 2: ", req.user)
 	res.sendFile(__dirname + "/client/main.html")
 })
-app.get("/create.html", isAuth, (req, res) => {
-	console.log("logged in 2: ", req.user)
-	res.sendFile(__dirname + "/client/create.html")
-})
-app.get("/dashboard.html", isAuth, (req, res) => {
-	console.log("logged in 2: ", req.user)
-	res.sendFile(__dirname + "/client/dashboard.html")
-})
-app.get("/delete.html", isAuth, (req, res) => {
-	console.log("logged in 2: ", req.user)
-	res.sendFile(__dirname + "/client/delete.html")
-})
-app.get("/main.html", isAuth, (req, res) => {
-	console.log("logged in 2: ", req.user)
-	res.sendFile(__dirname + "/client/main.html")
-})
-app.get("/update.html", isAuth, (req, res) => {
-	console.log("logged in 2: ", req.user)
-	res.sendFile(__dirname + "/client/update.html")
-})
+const protectedRoutes = ["/create.html", "/dashboard.html", "/delete.html", "/main.html", "/update.html"];
+
+protectedRoutes.forEach(route => {
+  app.get(route, isAuth, (req, res) => {
+    console.log(`logged in 2: ${req.user} accessing ${route}`);
+    res.sendFile(__dirname + `/client${route}`);
+  });
+});
 
 
 
