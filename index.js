@@ -7,7 +7,7 @@ const session = require('express-session')
 const GitHubStrategy = require('passport-github2').Strategy
 
 app.use(express.static(__dirname + '/client'))
-
+app.set("trust proxy", 2);
 
 const bodyParser = require("body-parser")
 app.use(bodyParser.urlencoded({extended: true}))
@@ -59,7 +59,7 @@ passport.use(new GitHubStrategy({
 ));
 
 passport.serializeUser(function (user, cb) {
-	//console.log('Serializing user:', user);
+	console.log('Serializing user:', user);
 	cb(null, user.id)
 })
 passport.deserializeUser(function (id, cb) {
