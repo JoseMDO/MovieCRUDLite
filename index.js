@@ -14,15 +14,6 @@ app.use(bodyParser.urlencoded({extended: true}))
 app.use(bodyParser.json());
 
 
-app.use(cors({
-	origin:"https://moviecrudlitejose.azurewebsites.net",
-	methods: "GET, POST, PUT, DELETE",
-	credentials: true,
-})
-)
-
-
-
 
 
 // Authentication  
@@ -44,6 +35,12 @@ app.use(session({
 app.use(passport.initialize())
 app.use(passport.session())
 
+app.use(cors({
+	origin:"https://moviecrudlitejose.azurewebsites.net",
+	methods: "GET, POST, PUT, DELETE",
+	credentials: true,
+})
+)
 
 
 passport.use(new GitHubStrategy({
@@ -105,6 +102,27 @@ const isAuth = (req, res, next) => {
   };
 
 app.get("/", isAuth, (req, res) => {
+	console.log("logged in 2: ", req.user)
+	res.sendFile(__dirname + "/client/main.html")
+})
+app.get("/create.html", isAuth, (req, res) => {
+	console.log("logged in 2: ", req.user)
+	res.sendFile(__dirname + "/client/main.html")
+})
+
+app.get("/dashboard.html", isAuth, (req, res) => {
+	console.log("logged in 2: ", req.user)
+	res.sendFile(__dirname + "/client/main.html")
+})
+app.get("/delete.html", isAuth, (req, res) => {
+	console.log("logged in 2: ", req.user)
+	res.sendFile(__dirname + "/client/main.html")
+})
+app.get("/main.html", isAuth, (req, res) => {
+	console.log("logged in 2: ", req.user)
+	res.sendFile(__dirname + "/client/main.html")
+})
+app.get("/update.html", isAuth, (req, res) => {
 	console.log("logged in 2: ", req.user)
 	res.sendFile(__dirname + "/client/main.html")
 })
@@ -239,7 +257,7 @@ app.get('/test', function(request, response) {
 })
 
 app.listen(port, function() {
-	console.log("Server is running at " + port)
+	console.log("Server is running at this port: " + port)
 })
 
 
