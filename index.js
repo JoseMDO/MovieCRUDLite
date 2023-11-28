@@ -6,7 +6,7 @@ const app = express();
 const session = require('express-session')
 const GitHubStrategy = require('passport-github2').Strategy
 
-app.use(express.static(__dirname + '/client'))
+
 app.set("trust proxy", 2);
 
 const bodyParser = require("body-parser")
@@ -81,16 +81,14 @@ const isAuth = (req, res, next) => {
 	}
   };
 
-app.use(isAuth)
-
-app.get("/", (req, res) => {
+app.get("/", isAuth, (req, res) => {
 	console.log("logged in 2: ", req.user)
 	res.sendFile(__dirname + "/client/main.html")
 })
 const protectedRoutes = ["/create.html", "/dashboard.html", "/delete.html", "/main.html", "/update.html"];
 
 protectedRoutes.forEach(route => {
-  app.get(route, (req, res) => {
+  app.get(route, isAuth, (req, res) => {
     console.log(`logged in 2: ${req.user} accessing ${route}`);
     res.sendFile(__dirname + `/client${route}`);
   });
@@ -133,7 +131,7 @@ app.get('/auth/github/callback', passport.authenticate('github', { failureRedire
   });
 
 
-
+app.use(express.static(__dirname + '/client'))
 
 
 
