@@ -72,7 +72,7 @@ passport.deserializeUser(function (id, cb) {
 const isAuth = (req, res, next) => {
 	console.log("isAuth middleware for: ", req.url);
 	console.log("req.user:", req.user);
-	if (req.user) {
+	if (req.isAuthenticated()) {
 	  console.log("User is authenticated:", req.user);
 	  next();
 	} else {
