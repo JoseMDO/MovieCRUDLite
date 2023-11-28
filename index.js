@@ -23,7 +23,7 @@ app.use(session({
 	resave: false,
 	saveUninitialized: false,
 	cookie: { 
-		// httpOnly: true,
+		httpOnly: true,
 		secure : true,
 		maxAge: 24 * 60 * 60 * 1000,
 	 }
@@ -34,7 +34,7 @@ app.use(passport.initialize())
 app.use(passport.session())
 
 app.use(cors({
-	origin:"http://localhost:3000",
+	origin:"http://localhost:3002",
 	methods: "GET, POST, PUT, DELETE",
 	credentials: true,
 })
@@ -44,7 +44,7 @@ app.use(cors({
 passport.use(new GitHubStrategy({
     clientID: "7072f7f40549cf49c75f",
     clientSecret: "098b3ab18cd86b0e1d2fbcf5446e69ae4a2046c9",
-    callbackURL: "http://localhost:3000/auth/github/callback"
+    callbackURL: "http://localhost:3002/auth/github/callback"
   },
   function(accessToken, refreshToken, profile, done) {
 	console.log("GitHub authentication callback");
@@ -229,7 +229,7 @@ app.delete('/delete/:id', async (req, res) => {
 
 
 
-const port = process.env.PORT || 3000
+const port = process.env.PORT || 3002
 
 app.get('/test', function(request, response) {
 	response.type('text/plain')
