@@ -34,7 +34,7 @@ app.use(passport.initialize())
 app.use(passport.session())
 
 app.use(cors({
-	origin:"moviecrudlitejose.azurewebsites.net",
+	origin:"https://moviecrudlitejose.azurewebsites.net",
 	methods: "GET, POST, PUT, DELETE",
 	credentials: true,
 })
@@ -44,7 +44,7 @@ app.use(cors({
 passport.use(new GitHubStrategy({
     clientID: "7072f7f40549cf49c75f",
     clientSecret: "098b3ab18cd86b0e1d2fbcf5446e69ae4a2046c9",
-    callbackURL: "moviecrudlitejose.azurewebsites.net/auth/github/callback"
+    callbackURL: "https://moviecrudlitejose.azurewebsites.net/auth/github/callback"
   },
   function(accessToken, refreshToken, profile, done) {
 	console.log("GitHub authentication callback");
