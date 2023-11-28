@@ -23,7 +23,7 @@ app.use(session({
 	resave: false,
 	saveUninitialized: false,
 	cookie: { 
-		httpOnly: true,
+		// httpOnly: true,
 		secure : true,
 		maxAge: 24 * 60 * 60 * 1000,
 	 }
@@ -34,7 +34,7 @@ app.use(passport.initialize())
 app.use(passport.session())
 
 app.use(cors({
-	origin:"http://localhost:3002",
+	origin:"moviecrudlitejose.azurewebsites.net",
 	methods: "GET, POST, PUT, DELETE",
 	credentials: true,
 })
@@ -44,7 +44,7 @@ app.use(cors({
 passport.use(new GitHubStrategy({
     clientID: "7072f7f40549cf49c75f",
     clientSecret: "098b3ab18cd86b0e1d2fbcf5446e69ae4a2046c9",
-    callbackURL: "http://localhost:3002/auth/github/callback"
+    callbackURL: "moviecrudlitejose.azurewebsites.net/auth/github/callback"
   },
   function(accessToken, refreshToken, profile, done) {
 	console.log("GitHub authentication callback");
@@ -61,10 +61,7 @@ passport.deserializeUser(function (id, cb) {
 	console.log('Deserializing user ID:', id);
 	cb(null, id)
 })
-// app.get('/set-session', (req, res) => {
-// 	req.session.username = 'testuser';
-// 	res.send('Session set.');
-//   });
+
   
   app.get('/get-session', (req, res) => {
 	const username = req.session.username;
