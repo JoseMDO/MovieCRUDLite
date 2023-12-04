@@ -6,7 +6,22 @@
     <title>Main Page</title>
 </head>
 <body>
+
+    <div id="welcome-message"></div>
     <a href="/dashboard.html">Movie Dashboard</a>
     <a href="/logout">Logout</a>
+
+
+    <script>
+        // Use JavaScript to fetch user information after the page has loaded
+        fetch('/get-session')
+            .then(response => response.json())
+            .then(user => {
+                if (user) {
+                    document.getElementById('welcome-message').innerHTML = `<p>Welcome, ${user.username}!</p>`;
+                }
+            })
+            .catch(error => console.error('Error fetching user information:', error));
+    </script>
 </body>
 </html>

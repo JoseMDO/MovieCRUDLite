@@ -23,7 +23,7 @@ app.use(session({
 	resave: false,
 	saveUninitialized: false,
 	cookie: { 
-		// httpOnly: true,
+		httpOnly: true,
 		secure : true,
 		maxAge: 24 * 60 * 60 * 1000,
 	 }
@@ -34,7 +34,7 @@ app.use(passport.initialize())
 app.use(passport.session())
 
 app.use(cors({
-	origin:"https://moviecrudlitejose.azurewebsites.net",
+	origin:"*",
 	methods: "GET, POST, PUT, DELETE",
 	credentials: true,
 })
@@ -44,28 +44,40 @@ app.use(cors({
 passport.use(new GitHubStrategy({
     clientID: "7072f7f40549cf49c75f",
     clientSecret: "098b3ab18cd86b0e1d2fbcf5446e69ae4a2046c9",
-    callbackURL: "https://moviecrudlitejose.azurewebsites.net/auth/github/callback"
+    callbackURL: "http://localhost:3002/auth/github/callback"
   },
   function(accessToken, refreshToken, profile, done) {
 	console.log("GitHub authentication callback");
-    console.log("Profile:", profile.id);
+    console.log("Profile:", profile.username);
     return done(null, profile)
   }
 ));
 
 passport.serializeUser(function (user, cb) {
 	console.log('Serializing user:', user);
-	cb(null, user.id)
+	const userDetails = {
+		username: user.username,
+		id: user.id,
+		displayName: user.displayName,
+	}
+	cb(null, userDetails)
 })
-passport.deserializeUser(function (id, cb) {
-	console.log('Deserializing user ID:', id);
-	cb(null, id)
+passport.deserializeUser(function (userDetails, cb) {
+	console.log(userDetails)
+	cb(null, userDetails)
 })
 
   
-  app.get('/get-session', (req, res) => {
-	const username = req.session.username;
-	res.send('Session username: ' + username);
+app.get('/get-session', (req, res) => {
+	// Assuming user information is stored in req.user
+	const user = req.user;
+	
+	// Check if the user is authenticated
+	if (user) {
+	  res.json(user);
+	} else {
+	  res.json(null); // or res.status(401).json({ error: 'Unauthorized' });
+	}
   });
 
 
@@ -83,7 +95,7 @@ const isAuth = (req, res, next) => {
 
 app.get("/", isAuth, (req, res) => {
 	console.log("logged in 2: ", req.user)
-	res.sendFile(__dirname + "/client/main.html")
+	res.sendFile(__dirname + "/client/main.html", { user: req.user })
 })
 const protectedRoutes = ["/create.html", "/dashboard.html", "/delete.html", "/main.html", "/update.html"];
 
